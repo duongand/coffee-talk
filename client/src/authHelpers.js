@@ -10,7 +10,21 @@ export function loginUser(loginForm) {
   return axios.post('/login', 
     body
   ).then((response) => {
-    // console.log(response);
+    console.log(response);
+    return response;
+  });
+};
+
+export function registerUser(registerForm) {
+  const body = ({
+    'username': registerForm.username,
+    'password': registerForm.password
+  });
+
+  return axios.post('/register', 
+    body
+  ).then((response) => {
+    console.log(response);
     return response;
   });
 };

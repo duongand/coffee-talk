@@ -7,7 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import {
-  loginUser
+  loginUser,
+  registerUser
 } from './authHelpers.js'
 
 import loggedUsers from './data/loggedUsers';
@@ -48,7 +49,12 @@ function App() {
       const token = loginUser(loginForm);
       console.log(token);
     } else if (formType === 'register-form') {
-      console.log('register form');
+      if (registerForm.password !== registerForm.confirmPassword) {
+        return;
+      };
+      
+      const token = registerUser(registerForm);
+      console.log(token);
     };
   };
 
