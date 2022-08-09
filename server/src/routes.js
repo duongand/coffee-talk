@@ -1,22 +1,55 @@
 import express from 'express';
-export const apiRouter =  new express.Router();
+import bcrypt from 'bcrypt';
+import jwtDecode from 'jwt-decode';
+export const apiRouter = new express.Router();
 
-apiRouter.get('/messages', (req, res) => {
-  // get messages when a user logs in
+import {
+  getAllMessages,
+  createMessage,
+  createDatabaseUser,
+  getAllDatabaseUsers,
+  getDatabaseUser,
+  getDatabaseUserById
+} from './database.js';
+
+apiRouter.get('/messages', async (req, res) => {
+  res.send(await getAllMessages());
 });
 
+// Requires user information to make
 apiRouter.post('/messages', (req, res) => {
-  // create a message
+  const { message, token } = req.body;
+  const userId = jwtDecode(token).userId;
+  createMessage(message, userId);
+  res.sendStatus(200)
 });
 
-apiRouter.get('/users', (req, res) => {
-  // get list of users to see if login request is valid pull id
+apiRouter.get('/users', async (req, res) => {
+  res.send(await getAllDatabaseUsers());
 });
 
-apiRouter.post('/users', (req, res) => {
-  // register a user
+apiRouter.post('/users', async (req, res) => {
+  const { username, password } = req.body;
+  const databaseUser = await getDatabaseUser(username);
+  if (databaseUser) {
+    res.status(401).json({
+      sucess: false,
+      err: 'User already created.'
+    });
+    return;
+  };
+
+  const saltRounds = 10;
+  bcrypt.hash(password, saltRounds, (err, hash) => {
+    createDatabaseUser(username, hash);
+    res.status(200).json({
+      success: true,
+      err: null
+    });
+  });
 });
 
-apiRouter.get(`/users/id`, (req, res) => {
-  // get user information based on id
+apiRouter.get(`/users/:id`, async (req, res) => {
+  const user = await getDatabaseUserById(req.params.id);
+  res.send(user);
 });

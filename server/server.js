@@ -1,8 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import { expressjwt } from 'express-jwt';
 
 import { apiRouter } from './src/routes.js';
@@ -20,9 +18,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cookieParser());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(cookieParser());
 
 app.use(express.json());
 
