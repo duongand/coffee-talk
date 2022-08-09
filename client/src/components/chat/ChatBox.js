@@ -2,7 +2,7 @@ import MessageForm from './MessageForm';
 import SentMessage from './SentMessage';
 import ReceivedMessage from './ReceivedMessage';
 
-function ChatBox({ messages }) {
+function ChatBox({ messages, handleMessageDraftChange, messageDraft, sendMessage }) {
   const currentUser = 'Ca Phe Sua Da';
 
   const messageList = messages.map((message) => {
@@ -18,7 +18,11 @@ function ChatBox({ messages }) {
       <ul className="message-list">
         {messageList}
       </ul>
-      <MessageForm />
+      <MessageForm
+        handleMessageDraftChange={handleMessageDraftChange}
+        messageDraft={messageDraft}
+        sendMessage={sendMessage}
+      />
     </div>
   );
 };

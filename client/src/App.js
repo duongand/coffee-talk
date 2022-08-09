@@ -9,10 +9,11 @@ import './App.css';
 import {
   loginUser,
   registerUser
-} from './authHelpers.js'
+} from './clientAuth.js'
 
-import loggedUsers from './data/loggedUsers';
-import chatMessages from './data/chatMessages';
+import {
+  createMessage
+} from './helpers.js';
 
 function App() {
   const [loginForm, setLoginForm] = useState({
@@ -24,7 +25,8 @@ function App() {
     'password': '',
     'confirmPassword': ''
   });
-  const [id, setId] = useState(null);
+  const [messageDraft, setMessageDraft] = useState('');
+  const [token, setToken] = useState(null);
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -42,20 +44,40 @@ function App() {
     }));
   };
 
-  function onSubmit(event) {
+  function handleMessageDraftChange(event) {
+    const { name, value } = event.target;
+    setMessageDraft((prevMessageDraft) => ({
+      ...prevMessageDraft,
+      [name]: value
+    }));
+  };
+
+  async function onSubmit(event) {
     event.preventDefault();
     const formType = event.target.className;
     if (formType === 'login-form') {
-      const token = loginUser(loginForm);
-      console.log(token);
+      const response = await loginUser(loginForm);
+
+      if (response.success) {
+        console.log('successful login');
+        setToken(response.token);
+				window.location.href = 'http://localhost:3000/chat';
+      };
     } else if (formType === 'register-form') {
       if (registerForm.password !== registerForm.confirmPassword) {
         return;
       };
       
-      const token = registerUser(registerForm);
-      console.log(token);
+      const response = await registerUser(registerForm);
+      if (response.success) {
+				window.location.href = 'http://localhost:3000/login';
+      };
     };
+  };
+
+  function sendMessage(event) {
+    event.preventDefault();
+    console.log(event);
   };
 
   return (
@@ -81,8 +103,11 @@ function App() {
           path="/chat"
           element={
             <Chat
-              users={loggedUsers}
-              messages={chatMessages}
+              users={[]}
+              messages={[]}
+              handleMessageDraftChange={handleMessageDraftChange}
+              messageDraft={messageDraft}
+              sendMessage={sendMessage}
             />
           } />
       </Routes>
