@@ -27,6 +27,14 @@ export function registerUser(registerForm) {
   });
 };
 
+export function logoutUser() {
+  removeToken();
+};
+
 function setToken(token) {
   localStorage.setItem('token', token);
+};
+
+function removeToken() {
+  localStorage.clear();
 };

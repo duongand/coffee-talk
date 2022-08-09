@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.5773b814.css",
-    "main.js": "/static/js/main.000e6b01.js",
+    "main.js": "/static/js/main.51557219.js",
     "static/media/coffee talk-logo.png": "/static/media/coffee talk-logo.ca6a78b98ca79e0bcf1a.png",
     "index.html": "/index.html",
     "main.5773b814.css.map": "/static/css/main.5773b814.css.map",
-    "main.000e6b01.js.map": "/static/js/main.000e6b01.js.map"
+    "main.51557219.js.map": "/static/js/main.51557219.js.map"
   },
   "entrypoints": [
     "static/css/main.5773b814.css",
-    "static/js/main.000e6b01.js"
+    "static/js/main.51557219.js"
   ]
 }

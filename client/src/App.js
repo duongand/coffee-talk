@@ -25,7 +25,9 @@ function App() {
     'password': '',
     'confirmPassword': ''
   });
-  const [messageDraft, setMessageDraft] = useState('');
+  const [messageDraft, setMessageDraft] = useState({
+    'message': ''
+  });
   const [token, setToken] = useState(null);
 
   function handleLoginChange(event) {
@@ -77,7 +79,10 @@ function App() {
 
   function sendMessage(event) {
     event.preventDefault();
-    console.log(event);
+    createMessage(messageDraft.message);
+    setMessageDraft({
+      'message': ''
+    });
   };
 
   return (

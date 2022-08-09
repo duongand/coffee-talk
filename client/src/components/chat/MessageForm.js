@@ -7,11 +7,11 @@ function MessageForm({ handleMessageDraftChange, messageDraft, sendMessage }) {
     <Form className="message-form" onSubmit={sendMessage}>
       <InputGroup>
         <Form.Control
-          name="messageDraft" 
+          name="message" 
           className="message-form--input" 
           type="text" 
           placeholder="Enter message" 
-          value={messageDraft}
+          value={messageDraft.message}
           onChange={handleMessageDraftChange}
         />
         <Button 

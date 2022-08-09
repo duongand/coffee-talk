@@ -1,8 +1,15 @@
+import { useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import UserList from '../components/chat/UserList';
 import ChatBox from '../components/chat/ChatBox';
+import { io } from 'socket.io-client';
 
 function Chat({ users, messages, handleMessageDraftChange, messageDraft, sendMessage }) {
+  useEffect(() => {
+    const socket = io();
+    console.log(socket);
+  }, []);
+
 	return (
 		<Container className="chat" fluid>
       <Row className="chat--row">
