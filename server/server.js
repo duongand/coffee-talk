@@ -1,6 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import { expressjwt } from 'express-jwt';
 
 import { apiRouter } from './src/routes.js';
@@ -10,6 +14,8 @@ const filePath = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(filePath);
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 const port = process.env.PORT || 3000;
 const buildPath = path.join(__dirname, '..', 'client', 'build');
 
@@ -18,20 +24,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
-// app.use(cookieParser());
-
-app.use(express.json());
-
 const jwtMW = expressjwt({
-  secret: 'bonnie and clyde',
+  secret: process.env.JWTSECRET,
   algorithms: ['HS256']
 });
 
 app.use(express.static(buildPath));
 app.use('/api', apiRouter);
 app.use(authRouter);
+app.use(express.json());
 
 app.get('/', jwtMW, (req, res) => {
   console.log('Web token checked');
@@ -42,6 +43,10 @@ app.get('/*', async(req, res) => {
   res.sendFile('index.html', { root: buildPath });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`coffee-talk listening on port ${port}`);
+});
+
+io.on('connection', (socket) => {
+  console.log('Made socket connection');
 });

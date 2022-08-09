@@ -16,7 +16,6 @@ apiRouter.get('/messages', async (req, res) => {
   res.send(await getAllMessages());
 });
 
-// Requires user information to make
 apiRouter.post('/messages', (req, res) => {
   const { message, token } = req.body;
   const userId = jwtDecode(token).userId;

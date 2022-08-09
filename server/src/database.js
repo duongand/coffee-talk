@@ -78,7 +78,6 @@ export function getAllMessages() {
 
 export async function createMessage(message, userId) {
   const lastMessage = await getLastCreatedMessage();
-  console.log(lastMessage);
   const lastMessageId = (lastMessage.length === 0 ? 0 : lastMessage[0].messageId);
   return pool.query('INSERT INTO MESSAGES("messageId", "message", "userId", "createDate") VALUES ($1, $2, $3, $4)', 
     [lastMessageId + 1, message, userId, getDate()])
