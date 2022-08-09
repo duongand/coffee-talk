@@ -66,7 +66,7 @@ function getLastCreatedUser() {
 };
 
 export function getAllMessages() {
-  return pool.query('SELECT * FROM MESSAGES')
+  return pool.query('SELECT messages."messageId", messages.message, users.username, messages."createDate" FROM messages JOIN users ON users."userId" = messages."userId"')
     .then((response) => {
       return response.rows;
     })

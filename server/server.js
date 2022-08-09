@@ -6,6 +6,8 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { expressjwt } from 'express-jwt';
+import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 
 import { apiRouter } from './src/routes.js';
 import { authRouter } from './src/authentication.js';
@@ -30,16 +32,16 @@ const jwtMW = expressjwt({
 });
 
 app.use(express.static(buildPath));
+app.use(express.json());
 app.use('/api', apiRouter);
 app.use(authRouter);
-app.use(express.json());
 
 app.get('/', jwtMW, (req, res) => {
   console.log('Web token checked');
   res.send('You are authenticated');
 });
 
-app.get('/*', async(req, res) => {
+app.get('/*', async (req, res) => {
   res.sendFile('index.html', { root: buildPath });
 });
 
@@ -47,6 +49,35 @@ server.listen(port, () => {
   console.log(`coffee-talk listening on port ${port}`);
 });
 
+const activeUsers = new Set();
 io.on('connection', (socket) => {
   console.log('Made socket connection');
+
+  socket.on('user login', async (token, callback) => {
+    console.log('New user added');
+    const userId = jwtDecode(token).userId;
+    const username = (await axios.get(`http://localhost:3000/api/users/${userId}`)).data.username;
+    const messages = (await axios.get('http://localhost:3000/api/messages')).data;
+    activeUsers.add(username);
+    callback({
+      'activeUsers': [...activeUsers],
+      'messages': messages
+    });
+  });
+
+  socket.on('saved messages', async (callback) => {
+    const messages = (await axios.get('http://localhost:3000/api/messages')).data;
+    callback(messages);
+  });
+
+  socket.on('active users', async (callback) => {
+    callback([...activeUsers]);
+  });
+
+  socket.on('disconnect', async (token, callback) => {
+    console.log('New user added');
+    const userId = jwtDecode(token).userId;
+    const username = (await axios.get(`http://localhost:3000/api/users/${userId}`)).data.username;
+    activeUsers.remove(username);
+  });
 });

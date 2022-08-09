@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { io } from 'socket.io-client';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Chat from './routes/Chat';
@@ -28,7 +29,31 @@ function App() {
   const [messageDraft, setMessageDraft] = useState({
     'message': ''
   });
-  const [token, setToken] = useState(null);
+  const [activeUsers, setActiveUsers] = useState([]);
+  const [messageLog, setMessageLog] = useState([]);
+  const socket = useRef(null);
+
+  useEffect(() => {
+    if (!localStorage.getItem('token')) return;
+
+    socket.current = io();
+    socket.current.emit('user login', localStorage.getItem('token'), (response) => {
+      setActiveUsers(response.activeUsers);
+      setMessageLog(response.messages);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!localStorage.getItem('token')) return;
+
+    socket.current.emit('saved messages', (messages) => {
+      setMessageLog(messages)
+    });
+
+    socket.current.emit('active users', (users) => {
+      setActiveUsers(users);
+    });
+  })
 
   function handleLoginChange(event) {
     const { name, value } = event.target;
@@ -61,8 +86,6 @@ function App() {
       const response = await loginUser(loginForm);
 
       if (response.success) {
-        console.log('successful login');
-        setToken(response.token);
 				window.location.href = 'http://localhost:3000/chat';
       };
     } else if (formType === 'register-form') {
@@ -83,6 +106,16 @@ function App() {
     setMessageDraft({
       'message': ''
     });
+  };
+
+  function logout(event) {
+    console.log('logged out');
+    event.preventDefault();
+    localStorage.clear();
+    setActiveUsers([]);
+    setMessageLog([]);
+    socket.current = null;
+    window.location.href = '/';
   };
 
   return (
@@ -108,11 +141,12 @@ function App() {
           path="/chat"
           element={
             <Chat
-              users={[]}
-              messages={[]}
+              users={activeUsers}
+              messages={messageLog}
               handleMessageDraftChange={handleMessageDraftChange}
               messageDraft={messageDraft}
               sendMessage={sendMessage}
+              logout={logout}
             />
           } />
       </Routes>
