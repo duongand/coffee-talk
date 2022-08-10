@@ -5,7 +5,7 @@ const pool = new Pool({
   host: 'localhost',
   user: 'postgres',
   port: 5432,
-  password: 'wodebaobei',
+  password: 'admin',
   database: 'postgres'
 });
 
@@ -86,6 +86,7 @@ export async function createMessage(message, userId) {
     })
     .catch((error) => {
       console.log(error);
+      return [];
     });
 };
 

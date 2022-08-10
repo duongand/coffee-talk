@@ -49,6 +49,5 @@ apiRouter.post('/users', async (req, res) => {
 });
 
 apiRouter.get(`/users/:id`, async (req, res) => {
-  const user = await getDatabaseUserById(req.params.id);
-  res.send(user);
+  res.send(await getDatabaseUserById(req.params.id));
 });

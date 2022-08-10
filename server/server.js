@@ -7,10 +7,13 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { expressjwt } from 'express-jwt';
 import jwtDecode from 'jwt-decode';
-import axios from 'axios';
 
 import { apiRouter } from './src/routes.js';
 import { authRouter } from './src/authentication.js';
+
+import { 
+	getAllMessages
+} from './src/database.js';
 
 const filePath = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(filePath);
@@ -31,6 +34,32 @@ const jwtMW = expressjwt({
   algorithms: ['HS256']
 });
 
+const activeUsers = new Set();
+io.on('connection', (socket) => {
+  console.log('Made socket connection');
+
+  socket.on('user joined', async (token) => {
+    const { username } = jwtDecode(token);
+    const messages = await getAllMessages();
+    activeUsers.add(username);
+		io.emit('new user', [...activeUsers]);
+    io.emit('return message', messages); 
+  });
+
+  socket.on('user left', (token) => {
+    console.log('A user has left');
+    const { username } = jwtDecode(token);
+    activeUsers.delete(username);
+		io.emit('new user', [...activeUsers]);
+  });
+
+	socket.on('new message', async () => {
+		console.log('New message was sent');
+		const messages = await getAllMessages();
+		io.emit('return message', messages);
+	});
+});
+
 app.use(express.static(buildPath));
 app.use(express.json());
 app.use('/api', apiRouter);
@@ -47,37 +76,4 @@ app.get('/*', async (req, res) => {
 
 server.listen(port, () => {
   console.log(`coffee-talk listening on port ${port}`);
-});
-
-const activeUsers = new Set();
-io.on('connection', (socket) => {
-  console.log('Made socket connection');
-
-  socket.on('user login', async (token, callback) => {
-    console.log('New user added');
-    const userId = jwtDecode(token).userId;
-    const username = (await axios.get(`http://localhost:3000/api/users/${userId}`)).data.username;
-    const messages = (await axios.get('http://localhost:3000/api/messages')).data;
-    activeUsers.add(username);
-    callback({
-      'activeUsers': [...activeUsers],
-      'messages': messages
-    });
-  });
-
-  socket.on('saved messages', async (callback) => {
-    const messages = (await axios.get('http://localhost:3000/api/messages')).data;
-    callback(messages);
-  });
-
-  socket.on('active users', async (callback) => {
-    callback([...activeUsers]);
-  });
-
-  socket.on('disconnect', async (token, callback) => {
-    console.log('New user added');
-    const userId = jwtDecode(token).userId;
-    const username = (await axios.get(`http://localhost:3000/api/users/${userId}`)).data.username;
-    activeUsers.remove(username);
-  });
 });

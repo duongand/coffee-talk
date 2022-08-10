@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -22,21 +24,21 @@ authRouter.post('/login', async (req, res) => {
       res.status(401).json({
         sucess: false,
         err: error,
-        user_id: null,
+        username: null,
         token: null
       });
       return;
     };
 
     console.log('Valid crendentials!');
-    const token = jwt.sign({ userId: databaseUser.userId },
-      'bonnie and clyde',
+    const token = jwt.sign({ userId: databaseUser.userId, username: databaseUser.username },
+      process.env.JWTSECRET,
       { expiresIn: 3600 }
     );
     res.json({
       success: true,
       err: null,
-      user_id: databaseUser.user_id,
+      username: databaseUser.username,
       token: token
     });
   });
