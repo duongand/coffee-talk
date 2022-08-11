@@ -4,11 +4,7 @@ import * as pg from 'pg';
 const { Pool } = pg.default;
 
 const pool = new Pool({
-  host: process.env.pgHOST,
-  user: process.env.pgUSER,
-  port: process.env.pgPORT,
-  password: process.env.pgPASSWORD,
-  database: process.env.pgDATABASE
+  connectionString: process.env.DATABASE_URL
 });
 
 export function getAllDatabaseUsers() {
