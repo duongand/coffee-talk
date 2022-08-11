@@ -1,12 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import * as pg from 'pg';
 const { Pool } = pg.default;
 
 const pool = new Pool({
-  host: 'localhost',
-  user: 'postgres',
-  port: 5432,
-  password: 'admin',
-  database: 'postgres'
+  host: process.env.pgHOST,
+  user: process.env.pgUSER,
+  port: process.env.pgPORT,
+  password: process.env.pgPASSWORD,
+  database: process.env.pgDATABASE
 });
 
 export function getAllDatabaseUsers() {
@@ -31,7 +33,8 @@ export function getDatabaseUser(username) {
     });
 };
 
-export function getDatabaseUserById(id) {
+export function getDatabaseUserById(token) {
+	
   return pool.query('SELECT * FROM USERS WHERE "userId" = $1', [id])
     .then((response) => {
       return response.rows[0];
@@ -48,10 +51,11 @@ export async function createDatabaseUser(username, hashPassword) {
   pool.query('INSERT INTO USERS("userId", "username", "password", "createDate") VALUES($1, $2, $3, $4)',
     [lastUserId + 1, username, hashPassword, getDate()])
     .then((response) => {
-      console.log('User created!');
+      return true;
     })
     .catch((error) => {
       console.log(error);
+			return false;
     });
 };
 

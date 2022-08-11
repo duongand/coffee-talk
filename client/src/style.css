@@ -9,8 +9,9 @@ body {
   background-color: #ece0d1;
 }
 
-li {
+ul, li {
   list-style: none;
+	padding-left: 0;
 }
 
 a, a:hover {
@@ -79,11 +80,10 @@ a, a:hover {
 	height: 100%;
 }
 
-
 .message-form {
   position: absolute;
   bottom: 15px;
-  width: 90%;
+  width: 80%;
 }
 
 .message-received {

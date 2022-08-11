@@ -26,10 +26,9 @@ apiRouter.post('/messages', (req, res) => {
   const response = createMessage(message, userId);
 	
 	if (response) {
-		res.sendStatus(200);
+		res.send(response);
 		return;
 	};
-	res.sendStatus(401);
 });
 
 apiRouter.get('/users', async (req, res) => {
@@ -64,8 +63,8 @@ apiRouter.post('/users', async (req, res) => {
   });
 });
 
-apiRouter.get(`/users/:id`, async (req, res) => {
-  res.send(await getDatabaseUserById(req.params.id));
+apiRouter.get('/users/:id', async (req, res) => {
+  res.send(await getDatabaseUserById(req.params.userId));
 });
 
 apiRouter.post('/login', async (req, res) => {

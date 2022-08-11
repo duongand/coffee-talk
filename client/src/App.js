@@ -7,12 +7,18 @@ import Home from './routes/Home';
 import Login from './routes/Login';
 import Chat from './routes/Chat';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import './style.css';
 
 import {
 	loginUser,
-	registerUser
+	registerUser,
 } from './clientAuth.js'
+
+import {
+	getToken,
+	checkToken,
+	removeToken
+} from './tokenHelpers.js';
 
 function App() {
 	const [loginForm, setLoginForm] = useState({
@@ -34,6 +40,10 @@ function App() {
 	let navigate = useNavigate();
 
 	useEffect(() => {
+		if (checkToken()) {
+			removeToken();
+		};
+
 		socket.current = io();
 
 		socket.current.on('new user', (activeUsers) => {
@@ -110,22 +120,17 @@ function App() {
 		setMessageDraft({ 'message': '' });
 	};
 
-	function logout(event) {
-		socket.current.emit('user left', localStorage.getItem('token'));
+	function logout() {
+		socket.current.emit('user left', getToken());
 		reset();
 		navigate('/', { replace: true })
-	};
-
-	function getToken() {
-		return localStorage.getItem('token');
 	};
 
 	function reset() {
 		setCurrentUsername('');
 		setActiveUsers([]);
 		setMessageLog([]);
-		localStorage.clear();
-		socket.current = null;
+		removeToken();
 	};
 
 	return (

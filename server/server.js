@@ -74,7 +74,3 @@ app.get('/*', async (req, res) => {
 server.listen(port, () => {
   console.log(`coffee-talk listening on port ${port}`);
 });
-
-// process.on('unhandledRejection', (reason, p) => {
-//   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
-// });

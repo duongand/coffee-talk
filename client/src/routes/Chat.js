@@ -6,13 +6,13 @@ function Chat({ currentUsername, users, messages, handleMessageDraftChange, mess
 	return (
 		<Container className="chat" fluid>
       <Row className="chat--row">
-        <Col md={1} className="chat--user-list">
+        <Col md={2} className="chat--user-list">
           <UserList 
             users={users}
             logout={logout}
           />
         </Col>
-        <Col md={11} className="chat--chat-container">
+        <Col md={10} className="chat--chat-container">
           <ChatBox
             currentUsername={currentUsername}
             messages={messages}
