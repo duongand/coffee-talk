@@ -7,10 +7,10 @@ function UserList({ users, logout }) {
   
   return (
     <div className="user-list">
+			<h5 className="user-list--header">Active Users:</h5>
       <ul className="user-list--list">
         {userList}
       </ul>
-      <Button variant="outline-dark" type="submit" onClick={logout}>Logout</Button>
     </div>
   );
 };

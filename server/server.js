@@ -7,9 +7,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { expressjwt } from 'express-jwt';
 import jwtDecode from 'jwt-decode';
-
 import { apiRouter } from './src/routes.js';
-import { authRouter } from './src/authentication.js';
 
 import { 
 	getAllMessages
@@ -33,6 +31,10 @@ const jwtMW = expressjwt({
   secret: process.env.JWTSECRET,
   algorithms: ['HS256']
 });
+
+app.use(express.static(buildPath));
+app.use(express.json());
+app.use('/api', apiRouter);
 
 const activeUsers = new Set();
 io.on('connection', (socket) => {
@@ -60,11 +62,6 @@ io.on('connection', (socket) => {
 	});
 });
 
-app.use(express.static(buildPath));
-app.use(express.json());
-app.use('/api', apiRouter);
-app.use(authRouter);
-
 app.get('/', jwtMW, (req, res) => {
   console.log('Web token checked');
   res.send('You are authenticated');
@@ -77,3 +74,7 @@ app.get('/*', async (req, res) => {
 server.listen(port, () => {
   console.log(`coffee-talk listening on port ${port}`);
 });
+
+// process.on('unhandledRejection', (reason, p) => {
+//   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+// });

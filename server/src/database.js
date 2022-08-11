@@ -82,11 +82,11 @@ export async function createMessage(message, userId) {
   return pool.query('INSERT INTO MESSAGES("messageId", "message", "userId", "createDate") VALUES ($1, $2, $3, $4)', 
     [lastMessageId + 1, message, userId, getDate()])
     .then((response) => {
-      return response.rows;
+      return true;
     })
     .catch((error) => {
       console.log(error);
-      return [];
+      return false;
     });
 };
 

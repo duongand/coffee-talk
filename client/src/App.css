@@ -18,6 +18,16 @@ a, a:hover {
   text-decoration: none;
 }
 
+.bg-coffee {
+	background-color: #634832;
+}
+
+.navbar--title {
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+}
+
 .home {
   margin-top: 10vh;
 
@@ -26,31 +36,54 @@ a, a:hover {
   align-items: center;
 }
 
-.chat--row {
-  height: 100vh;
+.login--container {
+	margin-top: 15vh;
 }
 
-.chat--user-list {
-  border: 1px solid black;
+.login--login-form, .login--register-form {
+	padding: 10px;
+	border: 2px solid #634832;
+	border-radius: 5px;
+	background-color: #dbc1ac;
+}
+
+.login--login-header, .login--register-header {
+	font-weight: bold;
+}
+
+.login--button, .register--button {
+	background-color: #634832;
+}
+
+.chat--row {
+	width: 100%;
+}
+
+.chat-box {
+	height: calc(100vh - 130px); 
+}
+
+.user-list--header {
+	margin-top: 10px;
+	font-weight: bold;
 }
 
 .user-list--list {
   list-style: none;
+	font-size: 20px;
 }
 
-.chat--chat-container {
-  border: 1px solid black;
+.message-list {
+	margin-top: 10px;
+	overflow: scroll;
+	height: 100%;
 }
 
-.chat-box {
-  position: relative;
-  height: 100%;
-}
 
 .message-form {
   position: absolute;
-  bottom: 50px;
-  width: 100%;
+  bottom: 15px;
+  width: 90%;
 }
 
 .message-received {

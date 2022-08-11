@@ -6,7 +6,7 @@ function RegisterForm({ registerForm, handleRegisterChange, onSubmit }) {
     <div className="login--register-form">
       <h2 className="login--register-header">Register</h2>
       <Form className="register-form" onSubmit={onSubmit}>
-        <Form.Group controlId="formUsername">
+        <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
           <Form.Control
             name="username"
@@ -15,7 +15,8 @@ function RegisterForm({ registerForm, handleRegisterChange, onSubmit }) {
             onChange={handleRegisterChange}
           />
         </Form.Group>
-        <Form.Group controlId="formBasicPassword">
+
+        <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
           <Form.Control
             name="password"
@@ -25,7 +26,8 @@ function RegisterForm({ registerForm, handleRegisterChange, onSubmit }) {
             onChange={handleRegisterChange}
           />
         </Form.Group>
-        <Form.Group controlId="formConfirmBasicPassword">
+
+        <Form.Group className="mb-3">
           <Form.Label>Confirm password</Form.Label>
           <Form.Control
             name="confirmPassword"
@@ -35,7 +37,7 @@ function RegisterForm({ registerForm, handleRegisterChange, onSubmit }) {
             onChange={handleRegisterChange}
           />
         </Form.Group>
-        <Button variant="outline-dark" type="submit">Register</Button>
+        <Button className="register--button" variant="dark" type="null">Register</Button>
       </Form>
     </div>
   );

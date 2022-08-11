@@ -1,12 +1,18 @@
-import MessageForm from './MessageForm';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MessageForm from '../form/MessageForm';
 import SentMessage from './SentMessage';
 import ReceivedMessage from './ReceivedMessage';
 
-function ChatBox({ messages, handleMessageDraftChange, messageDraft, sendMessage }) {
-  const currentUser = 'Ca Phe Sua Da';
+function ChatBox({ currentUsername, messages, handleMessageDraftChange, messageDraft, sendMessage }) {
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem('token')) navigate('/login', { replace: true });
+  }, []);
 
   const messageList = messages.map((message) => {
-    if (message.username === currentUser) {
+    if (message.username === currentUsername) {
       return <SentMessage message={message} />
     } else {
       return <ReceivedMessage message={message} />
