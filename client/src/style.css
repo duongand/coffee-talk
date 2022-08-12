@@ -124,3 +124,14 @@ a, a:hover {
   font-size: 75%;
   float: right;
 }
+
+.error-page {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+.error-message {
+	font-weight: bold;
+	margin-top: 25vh;
+}

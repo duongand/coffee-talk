@@ -6,6 +6,7 @@ import NavigationBar from './components/common/NavigationBar';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Chat from './routes/Chat';
+import Error from './routes/Error';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
@@ -195,6 +196,10 @@ function App() {
 							sendMessage={sendMessage}
 						/>
 					} />
+				<Route
+					path="/*"
+					element={<Error />}
+				/>
 			</Routes>
 		</div>
 	);
