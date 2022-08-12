@@ -39,7 +39,7 @@ apiRouter.post('/users', async (req, res) => {
   const { username, password } = req.body;
   const databaseUser = await getDatabaseUser(username);
   if (databaseUser) {
-    res.status(401).json({
+    res.status(400).json({
       sucess: false,
       err: 'User already created.'
     });
@@ -49,7 +49,7 @@ apiRouter.post('/users', async (req, res) => {
   const saltRounds = 10;
   bcrypt.hash(password, saltRounds, (err, hash) => {
     if (err) {
-      res.status(401).json({
+      res.status(400).json({
         success: false,
         err: err
       });
@@ -78,7 +78,7 @@ apiRouter.post('/login', async (req, res) => {
   bcrypt.compare(password, databaseUser.password, (error, result) => {
     if (!result) {
       console.log('Invalid username and password credentials!');
-      res.status(401).json({
+      res.status(400).json({
         sucess: false,
         err: error,
         username: null,
