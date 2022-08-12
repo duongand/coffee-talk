@@ -30,8 +30,7 @@ export function getDatabaseUser(username) {
     });
 };
 
-export function getDatabaseUserById(token) {
-	
+export function getDatabaseUserById(id) {
   return pool.query('SELECT * FROM USERS WHERE "userId" = $1', [id])
     .then((response) => {
       return response.rows[0];
