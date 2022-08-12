@@ -56,6 +56,10 @@ a, a:hover {
 	background-color: #634832;
 }
 
+.login-alert, .register-alert {
+	width: 40%;
+}
+
 .chat--row {
 	width: 100%;
 }
@@ -89,6 +93,7 @@ a, a:hover {
 .message-received {
   background-color: #634832;
   color: #ffffff;
+	margin-bottom: 5px;
   padding: 3px 15px;
   border-radius: 5px;
   list-style: none;
@@ -97,7 +102,7 @@ a, a:hover {
 }
 
 .message-received--username {
-  font-size: 75%;
+  font-size: 100%;
   font-weight: bold;
 }
 
@@ -107,6 +112,7 @@ a, a:hover {
 
 .message-sent {
   background-color: #ffffff;
+	margin-bottom: 5px;
   padding: 3px 15px;
   border-radius: 5px;
   list-style: none;

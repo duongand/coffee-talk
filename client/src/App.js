@@ -36,6 +36,8 @@ function App() {
 	const [currentUsername, setCurrentUsername] = useState('');
 	const [activeUsers, setActiveUsers] = useState([]);
 	const [messageLog, setMessageLog] = useState([]);
+	const [loginFail, setLoginFail] = useState(false);
+	const [registrationSuccessful, setRegistrationSuccessful] = useState(false);
 	const socket = useRef(null);
 	let navigate = useNavigate();
 
@@ -96,13 +98,25 @@ function App() {
 				setLoginForm({
 					'username': '',
 					'password': ''
-				})
+				});
+				setLoginFail(false);
 				navigate('/chat', { replace: true });
+			} else {
+				setLoginFail(true);
 			};
 		} else if (formType === 'register-form') {
 			if (registerForm.password !== registerForm.confirmPassword) return;
 			const response = await registerUser(registerForm);
-			if (response.success) window.location.href = '/login';
+			if (response.success) {
+				setRegisterForm({
+					'username': '',
+					'password': '',
+					'confirmPassword': ''
+				});
+				setRegistrationSuccessful(true);
+			} else {
+				setRegistrationSuccessful(false);
+			};
 		};
 	};
 
@@ -112,12 +126,20 @@ function App() {
 		axios.post('/api/messages', {
 			'message': messageDraft.message,
 			'token': getToken(),
-		}).then((response) => {
+		}).then(() => {
 			socket.current.emit('new message');
-		}).catch((error) => {
-			console.log(error);
+		}).catch(() => {
+			return;
 		});
 		setMessageDraft({ 'message': '' });
+	};
+
+	function closeLoginAlert() {
+		setLoginFail(false);
+	};
+
+	function closeRegisterAlert() {
+		setRegistrationSuccessful(false);
 	};
 
 	function logout() {
@@ -155,6 +177,10 @@ function App() {
 							registerForm={registerForm}
 							handleRegisterChange={handleRegisterChange}
 							onSubmit={onSubmit}
+							loginFail={loginFail}
+							closeLoginAlert={closeLoginAlert}
+							registrationSuccessful={registrationSuccessful}
+							closeRegisterAlert={closeRegisterAlert}
 						/>
 					} />
 				<Route

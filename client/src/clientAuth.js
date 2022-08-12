@@ -9,8 +9,7 @@ export function loginUser(loginForm) {
 		if (response.status === 401) return;
 		setToken(response.data.token);
 		return response.data;
-	}).catch((error) => {
-		console.log(error);
+	}).catch(() => {
 		return 401;
 	});
 };
@@ -22,9 +21,9 @@ export function registerUser(registerForm) {
 		'username': registerForm.username,
 		'password': registerForm.password
 	}).then((response) => {
-		return response.status;
-	}).catch((error) => {
-		console.log(error);
+		if (response.status === 401) return;
+		return response.data;
+	}).catch(() => {
 		return 401;
 	});
 };

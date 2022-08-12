@@ -9,7 +9,7 @@ function ChatBox({ currentUsername, messages, handleMessageDraftChange, messageD
 
   useEffect(() => {
     if (!localStorage.getItem('token')) navigate('/login', { replace: true });
-  }, []);
+  }, [navigate]);
 
   const messageList = messages.map((message) => {
     if (message.username === currentUsername) {

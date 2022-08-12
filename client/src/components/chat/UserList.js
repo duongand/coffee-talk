@@ -1,6 +1,4 @@
-import Button from 'react-bootstrap/Button';
-
-function UserList({ users, logout }) {
+function UserList({ users }) {
   const userList = users.map((user) => (
     <li key={user} className="user-list--user">{user}</li>
   ));
