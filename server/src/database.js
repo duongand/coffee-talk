@@ -1,12 +1,19 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import * as pg from 'pg';
-const { Pool } = pg.default;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-	ssl: { rejectUnauthorized: false }
-});
+import pg from 'pg';
+
+let pool;
+if (process.env.ENVIRONMENT === "PRODUCTION") {
+  pool = new pg.Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+} else {
+  pool = new pg.Pool({
+    connectionString: process.env.DATABASE_URL,
+  });
+};
 
 export function getAllDatabaseUsers() {
   return pool.query(`SELECT * FROM USERS`)
@@ -44,14 +51,14 @@ export function getDatabaseUserById(id) {
 export async function createDatabaseUser(username, hashPassword) {
   const lastUser = await getLastCreatedUser();
   const lastUserId = (lastUser.length === 0 ? 0 : lastUser[0].userId);
-  pool.query('INSERT INTO USERS("userId", "username", "password", "createDate") VALUES($1, $2, $3, $4)',
-    [lastUserId + 1, username, hashPassword, getDate()])
+  pool.query('INSERT INTO USERS("userId", "username", "password") VALUES($1, $2, $3)',
+    [lastUserId + 1, username, hashPassword])
     .then((response) => {
       return true;
     })
     .catch((error) => {
       console.log(error);
-			return false;
+      return false;
     });
 };
 
@@ -79,8 +86,8 @@ export function getAllMessages() {
 export async function createMessage(message, userId) {
   const lastMessage = await getLastCreatedMessage();
   const lastMessageId = (lastMessage.length === 0 ? 0 : lastMessage[0].messageId);
-  return pool.query('INSERT INTO MESSAGES("messageId", "message", "userId", "createDate") VALUES ($1, $2, $3, $4)', 
-    [lastMessageId + 1, message, userId, getDate()])
+  return pool.query('INSERT INTO MESSAGES("messageId", "message", "userId") VALUES ($1, $2, $3)',
+    [lastMessageId + 1, message, userId])
     .then((response) => {
       return true;
     })
@@ -98,9 +105,4 @@ function getLastCreatedMessage() {
       console.log(error);
       return [];
     });
-};
-
-function getDate() {
-  const currentDate = new Date();
-  return (`${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`)
 };
